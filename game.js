@@ -12,7 +12,7 @@
     const flapSound = document.getElementById('flap-sound');
     const coinSound = document.getElementById('coin-sound');
     const hitSound = document.getElementById('hit-sound');
-    // document.getElementById("high-score").textContent = highScore;
+    const backgroundMusic = document.getElementById('background-music');
 
     // Game variables
     let gameStarted = false;
@@ -59,6 +59,16 @@
     function playHitSound() {
         hitSound.volume = 0.8;
         hitSound.play().catch(e => console.log("Audio play failed:", e));
+    }
+
+    function playBackgroundMusic() {
+        backgroundMusic.volume = 0.7; 
+        backgroundMusic.play().catch(e => console.log("Background music play failed:", e));
+    }
+    
+    function stopBackgroundMusic() {
+        backgroundMusic.pause();
+        backgroundMusic.currentTime = 0; 
     }
 
     // Bird properties
@@ -442,13 +452,14 @@
         finalScoreElement.textContent = score;
         finalCoinsElement.textContent = coins;
         finalTotalElement.textContent = score + (coins * coinValue);
-        finalHighScoreElement.textContent = score + (coins * coinValue);
+        finalHighScoreElement.textContent = highScore;
         if (score > highScore) {
             highScore = score;
-            localStorage.setItem("highScore", highScore); // Lưu điểm vào localStorage
+            localStorage.setItem("highScore", highScore); // Save in localStorage
         }
         gameOverScreen.style.display = 'flex';
         playHitSound();
+        stopBackgroundMusic();
     }
 
     // Reset game
@@ -471,12 +482,14 @@
         pipes.position = [];
         rewards.position = [];
         gameOverScreen.style.display = 'none';
+        playBackgroundMusic();
     }
 
     // Event listeners
     startButton.addEventListener('click', function() {
         gameStarted = true;
         startScreen.style.display = 'none';
+        playBackgroundMusic();
     });
 
     restartButton.addEventListener('click', function() {
@@ -488,6 +501,7 @@
             if (!gameStarted) {
                 gameStarted = true;
                 startScreen.style.display = 'none';
+                playBackgroundMusic();
             } else if (!gameOver) {
                 bird.flap();
                 playFlapSound();

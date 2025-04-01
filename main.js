@@ -12,6 +12,7 @@
     const flapSound = document.getElementById('flap-sound');
     const coinSound = document.getElementById('coin-sound');
     const hitSound = document.getElementById('hit-sound');
+    // document.getElementById("high-score").textContent = highScore;
 
     // Game variables
     let gameStarted = false;
@@ -27,10 +28,10 @@
     birdImage.src = '/assets/bird.png'; 
     
     const pipeTopImage = new Image();
-    pipeTopImage.src = '/assets/top pipe.png'; 
+    pipeTopImage.src = '/assets/cloud.jpg'; 
     
     const pipeBottomImage = new Image();
-    pipeBottomImage.src = '/assets/bottom pipe.png';
+    pipeBottomImage.src = '/assets/cloud.jpg';
     
     const coinImage = new Image();
     coinImage.src = '/assets/coin.png'; 
@@ -441,7 +442,7 @@
         finalScoreElement.textContent = score;
         finalCoinsElement.textContent = coins;
         finalTotalElement.textContent = score + (coins * coinValue);
-        finalHighScoreElement.textContent = highScore;
+        finalHighScoreElement.textContent = score + (coins * coinValue);
         if (score > highScore) {
             highScore = score;
             localStorage.setItem("highScore", highScore); // Lưu điểm vào localStorage
@@ -452,6 +453,14 @@
 
     // Reset game
     function resetGame() {
+        // Calculate total before resetting
+        const total = score + (coins * coinValue);
+        
+        // Update high score if total exceeds current high score
+        if (total > highScore) {
+            highScore = total;
+            localStorage.setItem("highScore", highScore);
+        }
         gameOver = false;
         gameStarted = true;
         score = 0;

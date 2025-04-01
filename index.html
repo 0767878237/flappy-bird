@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flappy Bird HTML5</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas" width="320" height="480"></canvas>
+        
+        <div id="start-screen">
+            <h1>Flappy Bird</h1>
+            <p>Press the button or spacebar to start</p>
+            <p>Tap or press spacebar to fly</p>
+            <p>Collect coins for extra points!</p>
+            <button class="btn" id= "start-button">Start Game</button>
+        </div>
+        
+        <div id="game-over">
+            <h2>Game Over</h2>
+            <p>Score: <span id="final-score">0</span></p>
+            <p>Coins: <span id="final-coins">0</span></p>
+            <p>Total: <span id="final-total">0</span></p>
+            <p>High Score: <span id="high-score">0</span></p>
+            <button class="btn" id="restart-button">Play Again</button>
+        </div>
+    </div>
+    <audio id="flap-sound" src="/assets/flap.wav" preload="auto"></audio>
+    <audio id="coin-sound" src="/assets/coin.wav" preload="auto"></audio>
+    <audio id="hit-sound" src="/assets/died.wav" preload="auto"></audio>
+
+    <script src="/main.js"></script>
+</body>
+</html>

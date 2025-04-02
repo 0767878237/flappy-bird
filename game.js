@@ -5,6 +5,7 @@
     const gameOverScreen = document.getElementById('game-over');
     const startButton = document.getElementById('start-button');
     const restartButton = document.getElementById('restart-button');
+    const homeButton = document.getElementById('home-screen');
     const finalScoreElement = document.getElementById('final-score');
     const finalCoinsElement = document.getElementById('final-coins');
     const finalTotalElement = document.getElementById('final-total');
@@ -77,8 +78,8 @@
         y: 150,
         width: 34,
         height: 24,
-        gravity: 0.5,
-        jump: 6.6,
+        gravity: 0.3,
+        jump: 6,
         velocity: 0,
         
         draw: function() {
@@ -494,6 +495,13 @@
 
     restartButton.addEventListener('click', function() {
         resetGame();
+    });
+
+    homeButton.addEventListener('click', function() {
+        startScreen.style.display = 'flex';
+        gameOverScreen.style.display = 'none';
+        resetGame();
+        gameStarted = false;
     });
 
     document.addEventListener('keydown', function(e) {

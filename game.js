@@ -46,7 +46,7 @@
     function playFlapSound() {
         // Clone the audio element to allow overlapping sounds
         const flapSoundClone = flapSound.cloneNode();
-        flapSoundClone.volume = 0.5; // Set volume (0.0 to 1.0)
+        flapSoundClone.volume = 0.5;
         flapSoundClone.play().catch(e => console.log("Audio play failed:", e));
     }
 
@@ -193,9 +193,9 @@
                     ctx.fill();
                     
                     // Dollar sign
-                    // ctx.fillStyle = '#7d6608';
-                    // ctx.font = '15px Arial';
-                    // ctx.fillText('$', -5, 5);
+                    ctx.fillStyle = '#7d6608';
+                    ctx.font = '15px Arial';
+                    ctx.fillText('$', -5, 5);
                 }
                 
                 ctx.restore();

@@ -238,102 +238,76 @@
     };
 
     // Pipes properties
-    const pipes = {
-        position: [],
-        width: 52,
-        height: 320,
-        gap: 120,
-        // Adjusted pipe positioning
-        minYPosition: -250,
-        maxYPosition: -80,
-        
-        draw: function() {
-            for (let i = 0; i < this.position.length; i++) {
-                let p = this.position[i];
-                
-                // Top pipe
-                ctx.save();
-                ctx.drawImage(pipeTopImage, p.x, p.y, this.width, this.height);
-                
-                // Custom pipe drawing if image not loaded
-                if (!pipeTopImage.complete) {
-                    ctx.fillStyle = '#2ecc71';
-                    ctx.fillRect(p.x, p.y, this.width, this.height);
-                    
-                    // Border for pipe
-                    ctx.strokeStyle = 'black';
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(p.x, p.y, this.width, this.height);
-                    
-                    // Top cap
-                    ctx.fillStyle = '#27ae60';
-                    ctx.fillRect(p.x - 3, p.y, this.width + 6, 20);
-                    ctx.strokeRect(p.x - 3, p.y, this.width + 6, 20);
-                }
-                ctx.restore();
-                
-                // Bottom pipe
-                ctx.save();
-                ctx.drawImage(pipeBottomImage, p.x, p.y + this.height + this.gap, this.width, this.height);
-                
-                // Custom pipe drawing if image not loaded
-                if (!pipeBottomImage.complete) {
-                    ctx.fillStyle = '#2ecc71';
-                    ctx.fillRect(p.x, p.y + this.height + this.gap, this.width, this.height);
-                    
-                    // Border for pipe
-                    ctx.strokeStyle = 'black';
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(p.x, p.y + this.height + this.gap, this.width, this.height);
-                    
-                    // Bottom cap
-                    ctx.fillStyle = '#27ae60';
-                    ctx.fillRect(p.x - 3, p.y + this.height + this.gap, this.width + 6, 20);
-                    ctx.strokeRect(p.x - 3, p.y + this.height + this.gap, this.width + 6, 20);
-                }
-                ctx.restore();
-                
-                // Move pipes to the left
-                if (gameStarted && !gameOver) {
-                    p.x -= 2;
-                }
-                
-                // Remove pipes once they're off screen
-                if (p.x + this.width <= 0) {
-                    this.position.shift();
-                    // Add point when passing pipe
-                    score += 1;
-                }
-                
-                // Check for collision
-                if (
-                    bird.x + bird.width/2 > p.x && 
-                    bird.x - bird.width/2 < p.x + this.width && 
-                    (
-                        bird.y - bird.height/2 < p.y + this.height || 
-                        bird.y + bird.height/2 > p.y + this.height + this.gap
-                    )
-                ) {
-                    if (!gameOver) {
-                        gameOverHandler();
-                    }
-                }
+const pipes = {
+    position: [],
+    width: 52,
+    minHeight: 150,
+    maxHeight: 350,
+    gap: 120,
+    minYPosition: -250,
+    maxYPosition: -80,
+    changeRate: 120,
+    heightChangeAmount: 20,
+
+    draw: function() {
+        for (let i = 0; i < this.position.length; i++) {
+            let p = this.position[i];
+            // Top pipe
+            ctx.drawImage(pipeTopImage, p.x, p.y, this.width, p.height);
+            // Bottom pipe
+            ctx.drawImage(pipeBottomImage, p.x, p.y + p.height + this.gap, this.width, canvas.height - (p.y + p.height + this.gap));
+
+            if (gameStarted && !gameOver) {
+                p.x -= 2;
             }
-        },
-        
-        update: function() {
-            // Add new pipe every 100 frames
-            if (frames % 100 === 0) {
-                // Generate Y position within reasonable range
-                const randomY = this.minYPosition + Math.random() * (this.maxYPosition - this.minYPosition);
-                this.position.push({
-                    x: canvas.width,
-                    y: randomY
-                });
+
+            if (p.x + this.width <= 0) {
+                this.position.shift();
+                score += 1;
+            }
+
+            // Check collision
+            if (
+                bird.x + bird.width / 2 > p.x &&
+                bird.x - bird.width / 2 < p.x + this.width &&
+                (
+                    bird.y - bird.height / 2 < p.y + p.height ||
+                    bird.y + bird.height / 2 > p.y + p.height + this.gap
+                )
+            ) {
+                if (!gameOver) {
+                    gameOverHandler();
+                }
             }
         }
-    };
+    },
 
+    update: function() {
+        if (frames % 100 === 0) {
+            const pipeHeight = this.minHeight + Math.random() * (this.maxHeight - this.minHeight);
+            const pipeY = this.minYPosition + Math.random() * (this.maxYPosition - this.minYPosition);
+            
+            this.position.push({
+                x: canvas.width,
+                y: pipeY,
+                height: pipeHeight
+            });
+        }
+
+        if (frames % this.changeRate === 0) {
+            for (let i = 0; i < this.position.length; i++) {
+                if (Math.random() < 0.5) { 
+                    let newHeight = this.position[i].height + (Math.random() > 0.5 ? this.heightChangeAmount : -this.heightChangeAmount);
+    
+                    newHeight = Math.max(this.minHeight, Math.min(this.maxHeight, newHeight));
+                    
+                    this.position[i].height = newHeight;
+                }
+            }
+        }
+    }
+};
+    
     // Foreground properties
     const foreground = {
         height: 100,
